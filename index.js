@@ -30,6 +30,8 @@ io.on('connection', function(socket){
     //     console.log("publishing message", msg);
     //     pub.publish('chat message', msg);
     // });
+
+    console.log("connection on");
     var get_messages = client.zrange('messages', -1 * channel_history_max, -1).then(function(result) {
         return result.map(function(x) {
             return JSON.parse(x);
@@ -55,7 +57,7 @@ io.on('connection', function(socket){
             var message = JSON.stringify({
                 message: message_text
             })
-            client.hset('messages', message); 
+            client.zadd('messages', 3, message); 
             client.publish('messages', message);
         });
     }).catch(function(reason) {
